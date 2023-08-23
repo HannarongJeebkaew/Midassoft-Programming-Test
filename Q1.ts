@@ -37,4 +37,4 @@ function getHandScoreX(cards: string): number {
 }
 console.log(getHandScoreX("S3 H3 C3")); //32.5
 console.log(getHandScoreX("S8 S10 CA")); //18
-console.log(getHandScoreX("S2 S3 CA")); //1
+console.log(getHandScoreX("S2 S3 CA")); //11
