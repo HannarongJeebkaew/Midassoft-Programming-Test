@@ -1,56 +1,40 @@
-function getHandScore(inputStr: string): number | string {
-  // กำหนดค่าของการ์ด
-  const cardValues: { [key: string]: number } = {
-    "2": 2,
-    "3": 3,
-    "4": 4,
-    "5": 5,
-    "6": 6,
-    "7": 7,
-    "8": 8,
-    "9": 9,
-    "10": 10,
-    J: 10,
-    Q: 10,
-    K: 10,
-    A: 11,
-  };
-  let sumvalue: number = 0; // รวมคะแนน
-  const cards: string[] = inputStr.split(" ");
-  const suits: string[] = cards.map((card) => card[0]);
-  // ตรวจสอบว่าสัญลักษณ์หรือตัวเลขทั้งหมดเหมือนกันหรือไม่
-  const ranks: string[]=[];
-  for (const card of cards) {
-    if (card.length >= 4) {
-      return "input ผิดพลาด";
-    }
-    ranks.push(card.length > 2 ? card.slice(1,3) : card[1]);
-    sumvalue+=(cardValues[card.length > 2 ? card.slice(1,3) : card[1]]);
-  }
-  if (new Set(suits).size !== 1 && new Set(ranks).size !== 1) {
-    return "input ผิดพลาด";
-  }
-  // ตรวจสอบว่าการ์ดมีตัวเลขเหมือนกันทั้งสามใบหรือไม่
-  if (ranks.filter((rank) => rank === ranks[0]).length === 3) {
-    if (ranks[0] === "A") {
-      return 35;
-    } else {
-      return 32.5;
-    }
-  }
-  return sumvalue
+function getHandScoreX(cards: string): number {
 
+  let cardList: string[] = cards.split(' ');
+  
+  
+  let values: {[key: string]: number} = {
+      'A': 11,
+      'K': 10,
+      'Q': 10,
+      'J': 10
+  };
+  
+ 
+  let ranks: string[] = cardList.map(card => card.substring(1));
+  if (new Set(ranks).size === 1) {
+      if (ranks.includes('A')) {
+          return 35.0;
+      } else {
+          return 32.5;
+      }
+  }
   
 
+  let suitsScore: {[key: string]: number} = {'S': 0, 'C': 0, 'H': 0, 'D': 0};
+  
+  for (let card of cardList) {
+      let suit: string = card[0];
+      let rank: string = card.substring(1);
+      let score: number = values[rank] || parseInt(rank);
+      suitsScore[suit] += score;
+  }
+  
 
+  let maxScore: number = Math.max.apply(null, Object.keys(suitsScore).map(key => suitsScore[key]));
+  
+  return maxScore;
 }
-
-// ทดสอบฟังก์ชันด้วยรูปแบบใหม่
-const testInput1: string = "S8 H8 D10"; //ถ้าinput ไม่เหมือนกันจะไม่แจ้งเตือน
-const testInput2: string = "S8 S6 S10"; //Output 24
-const testInput3: string = "SA HA DA"; //Output 35
-const testInput4: string = "S2 H2 D2"; //Output 32.5
-console.log(getHandScore(testInput1));
-console.log(getHandScore(testInput2));
-console.log(getHandScore(testInput3));
-console.log(getHandScore(testInput4));
+console.log(getHandScoreX("S3 H3 C3")); //32.5
+console.log(getHandScoreX("S8 S10 CA")); //18
+console.log(getHandScoreX("S2 S3 CA")); //1
